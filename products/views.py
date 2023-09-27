@@ -8,7 +8,7 @@ from .serializer import product_serialize, products_serialize, user_lessons_seri
 
 
 # 1 Задание
-class AllUserProductsAPIView(APIView):
+class UserProductsAPIView(APIView):
     permission_classes = ((IsAdminUser|IsProfileOwner),)
 
     def get(self, request, id):
