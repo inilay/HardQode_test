@@ -1,36 +1,20 @@
-from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework import serializers
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from .utils import get_object
 from .models import Profile, Product
-from .permissions import IsEnrolled
+from .permissions import IsEnrolled, IsProfileOwner
 from .serializer import product_serialize, products_serialize, user_lessons_serialize
 
 
-class ProfileAPIView(APIView): 
-    
-    class OutputSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Profile
-            fields = "__all__"  
-        
+# 1 Задание
+class AllUserProductsAPIView(APIView):
+    permission_classes = ((IsAdminUser|IsProfileOwner),)
+
     def get(self, request, id):
         profile = get_object(Profile, id=id)
         self.check_object_permissions(request, profile)
-        serializer = self.OutputSerializer(profile, context={'request': request})
-        return Response(serializer.data)
-
-# 1 Задание
-class AllUserProductsAPIView(APIView):
-    permission_classes = (IsAuthenticated, )
-
-    def get(self, request, id):
-        profile = get_object(Profile, id=id)
         data = user_lessons_serialize(profile)
-        # data = {}
         return Response(data)
 
 # 2 Задание
