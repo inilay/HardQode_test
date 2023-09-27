@@ -7,6 +7,7 @@ from datetime import timedelta
 class LessonViewSerializer(serializers.Serializer):
     view_time = serializers.DurationField()
     lesson_status = serializers.CharField()
+    last_view = serializers.DateTimeField()
 
 class LessonSerializer(serializers.Serializer):
     lesson_name = serializers.CharField()
@@ -48,8 +49,8 @@ class ProductsStatisticSerializer(serializers.Serializer):
     def get_view_statistic(self, obj):
         total_view = 0
         total_view_time = timedelta()
-        for profile in obj.profile_set.select_related('user').all():
-            for lesson_view in profile.lessonview_set.all():
+        for profile in obj.profile_set.all():
+            for lesson_view in profile.lessonview_set.select_related('lesson').all():
                 if lesson_view.lesson_status == "Viewed":
                     total_view += 1
                 total_view_time += lesson_view.view_time
