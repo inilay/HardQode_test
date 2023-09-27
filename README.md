@@ -1,5 +1,3 @@
-## Тестовое задание от HardQode на Python разработчика
-
 ### ER диаграмма спроектированной базы данных 
 
 ![ER](https://github.com/inilay/HardQode_test/blob/master/DataBaseER.png)
