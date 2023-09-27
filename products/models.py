@@ -35,21 +35,11 @@ class LessonView(models.Model):
     view_time = models.DurationField()
     user_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    # last_view = models.DateTimeField()
+    last_view = models.DateTimeField(null=True)
 
     @property
-    def lesson_status_x(self):
+    def lesson_status(self):
         return 'Viewed' if self.view_time.total_seconds() / self.lesson.lesson_duration.total_seconds() >= 0.8 else 'Not viewed'
-
-    class LessonStatus(models.TextChoices):
-        VIEWED = 'Y', _('Viewed')
-        NOTVIEWED = 'N', _('Not viewed')
-
-    lesson_status = models.CharField(
-        max_length=1,
-        choices=LessonStatus.choices,
-        default=LessonStatus.NOTVIEWED,
-    )
 
     def __str__(self):
         return f'{self.user_profile.user.username} LessonView for {self.lesson.lesson_name}'
